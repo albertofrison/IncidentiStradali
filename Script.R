@@ -1,18 +1,17 @@
-library (readxl)  #Alternative 1, ops readxl does NOT read xlx files from an url....
-library(openxlsx) #Alternative 2, ops... even openxlx throws an error [Error in file(con, "r") : argomento 'description' non valido] and my Excel was CLOSED,...
+#library (readxl)  #Alternative 1, ops readxl does NOT read xlx files from an url....
+#library(openxlsx) #Alternative 2, ops... even openxlx throws an error [Error in file(con, "r") : argomento 'description' non valido] and my Excel was CLOSED,...
 
-# finallu found the right way to do it: 1 HTTR GET + READXL
+# Alternative 3, Download and THEN open the file (with readxl) does not work, file donwloaded cannot be opened...
+
+# Alternative 4 works, use HTTR, GET + READXL
 library(readxl)
 library(httr)
 library(tidyverse)
-
-# Alternative 3, Download and THEN open the file (with readxl)
 
 # 01. Load the Data (Accidents 2020)
 Year2020 <- 'https://www.aci.it/fileadmin/documenti/studi_e_ricerche/dati_statistiche/incidenti/Localizzazione_Strade_Provinciali_2020.xls'
 GET(Year2020, write_disk(file_2020 <- tempfile(fileext = ".xls")))
 data_2020 <- data.frame(read_excel(file_2020, sheet = "IMF_COMUNE_SP"))
-
 
 # 02. Load the Data (Abitanti per Provincia)
 Abitanti <- 'https://github.com/MatteoHenryChinaski/Comuni-Italiani-2018-Sql-Json-excel/blob/master/italy_provincies.xlsx?raw=true'
@@ -33,9 +32,8 @@ names (data_2020)[7] <- "COMUNE"
 
 data2020_a <- merge(data_2020, abitanti_2018[,c("PROVINCIA","superficie", "residenti")], by = "PROVINCIA")
 
-tail (data2020_a)
-head (abitanti_2018)
-
+#tail (data2020_a)
+#head (abitanti_2018)
 
 data2020_a %>%
   #filter (REGIONE == "Piemonte" ) %>%
@@ -53,5 +51,4 @@ data2020_a %>%
   #theme(axis.text.x=element_text(angle = -90, hjust = 0))
 
 
-head(data_2020)
-?summarize
+#still under costruction!
